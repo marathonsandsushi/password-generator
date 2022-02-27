@@ -21,3 +21,6 @@ Web-application which creates a randomly generated password based on answer to q
 
 ## Live URL
 https://marathonsandsushi.github.io/password-generator/
+
+## Screenshot
+![Screenshot of password-generator page!](password-gen-screenshot.png "Password Generator Screenshot")
