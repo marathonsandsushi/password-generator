@@ -11,22 +11,22 @@ const PASSWORD_MIN_LENGTH = 8;
 // Users can choose to require that certain characters types are included
 const characterTypes = [
     {
-        type : "lowercase",
+        type : "lowercase letters",
         values : "abcdefghijklmnopqrstuvwxyz",
         used : false
     },
     {
-        type : "uppercase",
+        type : "uppercase letters",
         values : "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
         used : false
     },
     {
-        type : "numerical",
+        type : "numerical characters",
         values : "0123456789",
         used : false
     },
     {
-        type : "special",
+        type : "special characters",
         values : "!#$%&'()*+,-./:;<=>?@[]^_`{|}~",
         used : false
     }
@@ -73,20 +73,25 @@ function promptCharacterTypes () {
         // should there be x character type?
         for( let i = 0 ; i < characterTypes.length ; i++ ) {
 
-            var characterTypeDecision = window.prompt ('Should this password include ' + characterTypes[i].type + " characters?");
+            var characterTypeDecision = window.prompt ('If this password MUST include ' + characterTypes[i].type + ", please enter 1." + 
+            "\nIf this password must NOT include " + characterTypes[i].type + ", please enter 2." +
+            "\nIf this password CAN include " + characterTypes[i].type + " but doesn't have to, please enter 3.");
             
-            if(characterTypeDecision.toUpperCase() === "YES"){
+            if(characterTypeDecision.toUpperCase() === "1"){
 
                 specialRequirements.push(characterTypes[i]);
                 // break out of the while loop that I haven't written yet
             } 
-            else if (characterTypeDecision.toUpperCase() === "NO"){
+            else if (characterTypeDecision.toUpperCase() === "2"){
+                // break out of the while loop that I haven't written yet
+            } 
+            else if (characterTypeDecision.toUpperCase() === "3"){
                 // break out of the while loop that I haven't written yet
                 characterTypes[i].used = true;
+                specialRequirements.push(characterTypes[i]);
             } 
             else {
-
-                // CODE NOT DONE
+                // Future, if the user enters something other than 1, 2, or 3, ask again
                 // continue the while loop that I haven't written yet
             }
         }
@@ -97,19 +102,29 @@ function promptCharacterTypes () {
 
             keepAsking = false;
 
-            let message = "You chose to include these character types: \n\n";
+            let message = "You chose these condition for the password: \n\n";
+
+            message += " - The password's length should be " + passwordLength + "\n";
+
 
             for(let i = 0 ; i < specialRequirements.length; i++){
 
-                message += "- " + specialRequirements[i].type + "\n";
-            }
+                if(specialRequirements[i].used === true) {
+                    message += " - The password CAN contain " + specialRequirements[i].type + "\n";
+                }
+                else if(specialRequirements[i].used === false) {
+                    message += " - The password MUST contain " + specialRequirements[i].type + "\n";
+                }
+            } 
+
+            message += " - No other character types can be present in the password.";
             
             window.alert(message);
         }
         else {
 
             // you need to chose at least one character type
-            window.alert("you need to chose at least one character type to include in the password");
+            window.alert("You need to chose at least one character type to include in the password");
         }
 
     } 
@@ -134,16 +149,17 @@ function generatePassword () {
             // approximately uniform distribution over the range [0 , highestIndex)
             let index = Math.floor(Math.random() * specialRequirements[i].values.length);
             let character = specialRequirements[i].values[index];
-            //insert into random spot
+            // insert into random spot
             index = Math.floor(Math.random() * password.length);
 
             password = password.slice(0, index) + character + password.slice(index);
             specialRequirements[i].used = true;
         }
         else {
+
             let character = generateRandomChar();
 
-            //insert into random spot
+            // insert into random spot
             let index = Math.floor(Math.random() * password.length);
          
             password = password.slice(0, index) + character + password.slice(index);
@@ -161,22 +177,22 @@ function generateRandomChar () {
     // but that's good because the randomizer function 'max' is non-inclusive
     let highestIndex = 0;
 
-    for(let i = 0 ; i < characterTypes.length ; i++ ){
-        highestIndex += characterTypes[i].values.length;
+    for(let i = 0 ; i < specialRequirements.length ; i++ ){
+        highestIndex += specialRequirements[i].values.length;
     }
 
     // approximately uniform distribution over the range [0 , highestIndex)
     let index = Math.floor(Math.random() * highestIndex);
 
     // grab the character from the appropriate character type
-    for(let j = 0 ; j < characterTypes.length; j++ ){
+    for(let j = 0 ; j < specialRequirements.length; j++ ){
 
-        if(index < characterTypes[j].values.length ) {
+        if(index < specialRequirements[j].values.length ) {
 
-            characterTypes[j].used = true;
-            return characterTypes[j].values[index];
+            specialRequirements[j].used = true;
+            return specialRequirements[j].values[index];
         }
-        index -= characterTypes[j].values.length;
+        index -= specialRequirements[j].values.length;
     }
 }
 
@@ -198,7 +214,6 @@ function promptUserAndGeneratePassword() {
   var passwordText = document.querySelector("#password");
 
   passwordText.value = password;
-
 }
 
 // Add event listener to generate button marathonsandsushi
