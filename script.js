@@ -126,7 +126,6 @@ function generatePassword () {
         password += generateRandomChar();  
     }
 
-    window.alert("PASSWord so far: " + password);
     // make sure that you fill the special requirements
     for(let i = 0 ; i < specialRequirements.length ; i++ ) {
 
@@ -142,17 +141,12 @@ function generatePassword () {
             specialRequirements[i].used = true;
         }
         else {
-            window.alert(specialRequirements[i].type + " has been used ..  generating random char");
-
             let character = generateRandomChar();
 
             //insert into random spot
             let index = Math.floor(Math.random() * password.length);
-
-            window.alert("character: " + character + " index to insert: " + index);
-                                                                                                    // O'm working this method
+         
             password = password.slice(0, index) + character + password.slice(index);
-
         }
     }
 
