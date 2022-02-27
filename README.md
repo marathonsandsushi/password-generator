@@ -18,3 +18,6 @@ Web-application which creates a randomly generated password based on answer to q
 * functions, for-loops
 * calling javascript functions from html 
 * putting text inside html from javascript
+
+## Live URL
+https://marathonsandsushi.github.io/password-generator/
